@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForaLending.API", "ForaLending.API\ForaLending.API.csproj", "{EE27DC73-29B3-41BE-B360-0A5B98A7265A}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{43FA5F52-CF77-4925-842D-E161C4E0FCFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE27DC73-29B3-41BE-B360-0A5B98A7265A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE27DC73-29B3-41BE-B360-0A5B98A7265A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE27DC73-29B3-41BE-B360-0A5B98A7265A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE27DC73-29B3-41BE-B360-0A5B98A7265A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43FA5F52-CF77-4925-842D-E161C4E0FCFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43FA5F52-CF77-4925-842D-E161C4E0FCFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43FA5F52-CF77-4925-842D-E161C4E0FCFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43FA5F52-CF77-4925-842D-E161C4E0FCFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3DC5E252-2441-424B-B3C7-DC8E88A78886}
+	EndGlobalSection
+EndGlobal
