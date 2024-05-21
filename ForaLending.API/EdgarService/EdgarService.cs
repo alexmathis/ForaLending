@@ -16,7 +16,7 @@ public class EdgarService
 
     public EdgarService(IHttpClientFactory httpClientFactory, IServiceScopeFactory scopeFactory, ILogger<EdgarService> logger)
     {
-        _httpClient = _httpClient = httpClientFactory.CreateClient("EdgarClient"); ;
+        _httpClient = httpClientFactory.CreateClient("EdgarClient"); ;
         _scopeFactory = scopeFactory;
         _logger = logger;
 
