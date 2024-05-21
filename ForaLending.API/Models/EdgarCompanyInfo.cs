@@ -5,49 +5,67 @@ namespace ForaFinacial.API.Models
 {
     public class EdgarCompanyInfo
     {
-        [Key]
+        [JsonPropertyName("cik")]
         public int Cik { get; set; }
-        public required string EntityName { get; set; }
-        public required InfoFact Facts { get; set; }
 
-        public class InfoFact
+        [JsonPropertyName("entityName")]
+        public string EntityName { get; set; }
+
+        [JsonPropertyName("facts")]
+        public Facts facts { get; set; }
+
+        public class Facts
         {
             [JsonPropertyName("us-gaap")]
-            public required InfoFactUsGaap UsGaap { get; set; }
+            public UsGaap UsGaap { get; set; }
         }
 
-        public class InfoFactUsGaap
+        public class UsGaap
         {
-            public required InfoFactUsGaapNetIncomeLoss NetIncomeLoss { get; set; }
+            [JsonPropertyName("NetIncomeLoss")]
+            public NetIncomeLoss NetIncomeLoss { get; set; }
         }
 
-        public class InfoFactUsGaapNetIncomeLoss
+        public class NetIncomeLoss
         {
-            public required InfoFactUsGaapIncomeLossUnits Units { get; set; }
+            [JsonPropertyName("units")]
+            public Units Units { get; set; }
         }
 
-        public class InfoFactUsGaapIncomeLossUnits
+        public class Units
         {
-            public required InfoFactUsGaapIncomeLossUnitsUsd[] Usd { get; set; }
+            [JsonPropertyName("USD")]
+            public List<IncomeRecord> Usd { get; set; }
         }
 
-        public class InfoFactUsGaapIncomeLossUnitsUsd
+        public class IncomeRecord
         {
-            /// <summary>
-            /// Possibilities include 10-Q, 10-K,8-K, 20-F, 40-F, 6-K, and
-            /// their variants. YOU ARE INTERESTED ONLY IN 10-K DATA!
-            /// </summary>
-            public required string Form { get; set; }
-            /// <summary>
-            /// For yearly information, the format is CY followed by the year
-            /// number. For example: CY2021. YOU ARE INTERESTED ONLY IN YEARLY INFORMATION
-            /// WHICH FOLLOWS THIS FORMAT!
-            /// </summary>
-            public required string Frame { get; set; }
-            /// <summary>
-            /// The income/loss amount.
-            /// </summary>
+            [JsonPropertyName("start")]
+            public DateTime Start { get; set; }
+
+            [JsonPropertyName("end")]
+            public DateTime End { get; set; }
+
+            [JsonPropertyName("val")]
             public decimal Val { get; set; }
+
+            [JsonPropertyName("accn")]
+            public string Accn { get; set; }
+
+            [JsonPropertyName("fy")]
+            public int Fy { get; set; }
+
+            [JsonPropertyName("fp")]
+            public string Fp { get; set; }
+
+            [JsonPropertyName("form")]
+            public string Form { get; set; }
+
+            [JsonPropertyName("filed")]
+            public DateTime Filed { get; set; }
+
+            [JsonPropertyName("frame")]
+            public string Frame { get; set; }
         }
     }
 }

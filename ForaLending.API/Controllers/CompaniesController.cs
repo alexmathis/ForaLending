@@ -23,86 +23,84 @@ namespace ForaLending.API.Controllers
 
         // GET: api/Companies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Company>>> GetCompanies()
+        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanies([FromQuery] char? startsWith)
         {
-            return await _context.Companies.ToListAsync();
-        }
+            var query = _context.Companies.Include(c => c.IncomeRecords).AsQueryable();
 
-        // GET: api/Companies/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Company>> GetCompany(int id)
-        {
-            var company = await _context.Companies.FindAsync(id);
-
-            if (company == null)
+            if (startsWith.HasValue)
             {
-                return NotFound();
+                query = query.Where(c => c.Name.StartsWith(startsWith.ToString() ?? "", StringComparison.OrdinalIgnoreCase));
             }
 
-            return company;
+            var companies = await query.ToListAsync();
+            var companyDtos = companies.Select(c => new CompanyDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                StandardFundableAmount = CalculateStandardFundableAmount(c),
+                SpecialFundableAmount = CalculateSpecialFundableAmount(c)
+            }).ToList();
+
+            return Ok(companyDtos);
         }
 
-        // PUT: api/Companies/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCompany(int id, Company company)
+        private decimal CalculateStandardFundableAmount(Company company)
         {
-            if (id != company.Id)
+            var incomeRecords = company?.IncomeRecords?.Where(r => (r.Frame ?? "").StartsWith("CY")).ToList();
+            var incomeYears = incomeRecords.Select(r => int.Parse((r.Frame ?? "").Substring(2))).ToList();
+
+            if (!incomeYears.Contains(2018) || !incomeYears.Contains(2019) || !incomeYears.Contains(2020) || !incomeYears.Contains(2021) || !incomeYears.Contains(2022))
             {
-                return BadRequest();
+                return 0;
             }
 
-            _context.Entry(company).State = EntityState.Modified;
+            var income2021 = incomeRecords.FirstOrDefault(r => r.Frame == "CY2021")?.Val ?? 0;
+            var income2022 = incomeRecords.FirstOrDefault(r => r.Frame == "CY2022")?.Val ?? 0;
 
-            try
+            if (income2021 <= 0 || income2022 <= 0)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CompanyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return 0;
             }
 
-            return NoContent();
+            var highestIncome = incomeRecords.Max(r => r.Val);
+
+            if (highestIncome >= 10000000000)
+            {
+                return highestIncome * 0.1233m;
+            }
+
+            return highestIncome * 0.2151m;
         }
 
-        // POST: api/Companies
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Company>> PostCompany(Company company)
+        private decimal CalculateSpecialFundableAmount(Company company)
         {
-            _context.Companies.Add(company);
-            await _context.SaveChangesAsync();
+            var standardAmount = CalculateStandardFundableAmount(company);
+            var specialAmount = standardAmount;
 
-            return CreatedAtAction("GetCompany", new { id = company.Id }, company);
-        }
-
-        // DELETE: api/Companies/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCompany(int id)
-        {
-            var company = await _context.Companies.FindAsync(id);
-            if (company == null)
+            if ("AEIOU".Contains(char.ToUpper(company.Name[0])))
             {
-                return NotFound();
+                specialAmount += standardAmount * 0.15m;
             }
 
-            _context.Companies.Remove(company);
-            await _context.SaveChangesAsync();
+            var income2021 = company.IncomeRecords?.FirstOrDefault(r => r.Frame == "CY2021")?.Val ?? 0;
+            var income2022 = company.IncomeRecords?.FirstOrDefault(r => r.Frame == "CY2022")?.Val ?? 0;
 
-            return NoContent();
-        }
+            if (income2022 < income2021)
+            {
+                specialAmount -= standardAmount * 0.25m;
+            }
 
-        private bool CompanyExists(int id)
-        {
-            return _context.Companies.Any(e => e.Id == id);
+            return specialAmount;
         }
     }
+
+    public class CompanyDto
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public decimal StandardFundableAmount { get; set; }
+        public decimal SpecialFundableAmount { get; set; }
+    }
+
+
 }
