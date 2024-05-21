@@ -81,23 +81,23 @@ public class EdgarService
                 Name = companyInfo.EntityName,
             };
 
-            // Create the income records and set the Company reference
-            //company.IncomeRecords = companyInfo.Facts.UsGaap.NetIncomeLoss.Units.Usd
-            //    .Where(u => u.Form == "10-K" && u.Frame.StartsWith("CY"))
-            //    .Select(u => new IncomeRecord
-            //    {
-            //        Form = u.Form,
-            //        Frame = u.Frame,
-            //        Val = u.Val,
-            //        Company = company // Set the Company reference
-            //    }).ToList();
+            //Create the income records and set the Company reference
+            company.IncomeRecords = companyInfo?.Facts?.UsGaap?.NetIncomeLoss?.Units?.Usd?
+                .Where(u => (u.Form ?? "") == "10-K" && (u.Frame ?? "").StartsWith("CY"))
+                .Select(u => new IncomeRecord
+                {
+                    Form = u.Form,
+                    Frame = u.Frame,
+                    Val = u.Val,
+                    Company = company // Set the Company reference
+                }).ToList();
 
             context.Companies.Add(company);
             await context.SaveChangesAsync();
         }
         catch(Exception ex)
         {
-            _logger.LogWarning(ex.Message ?? "");
+            _logger.LogWarning($"Deserialization error for {cik} error message {ex.Message}" ?? "");
         }
    
 

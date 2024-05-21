@@ -46,30 +46,21 @@ namespace ForaLending.API.Controllers
 
         private decimal CalculateStandardFundableAmount(Company company)
         {
-            var incomeRecords = company?.IncomeRecords?.Where(r => (r.Frame ?? "").StartsWith("CY")).ToList();
-            var incomeYears = incomeRecords.Select(r => int.Parse((r.Frame ?? "").Substring(2))).ToList();
+            var incomeRecords = company?.IncomeRecords?.Where(r => r.Frame?.StartsWith("CY") == true).ToList();
+           
+            var requiredYears = new[] { "2018", "2019", "2020", "2021", "2022" };
+            var incomeYears = incomeRecords?.Select(r => r?.Frame?[2..]).ToList();
 
-            if (!incomeYears.Contains(2018) || !incomeYears.Contains(2019) || !incomeYears.Contains(2020) || !incomeYears.Contains(2021) || !incomeYears.Contains(2022))
-            {
-                return 0;
-            }
+            var income2021 = incomeRecords?.FirstOrDefault(r => r.Frame == "CY2021")?.Val ?? 0;
+            var income2022 = incomeRecords?.FirstOrDefault(r => r.Frame == "CY2022")?.Val ?? 0;
 
-            var income2021 = incomeRecords.FirstOrDefault(r => r.Frame == "CY2021")?.Val ?? 0;
-            var income2022 = incomeRecords.FirstOrDefault(r => r.Frame == "CY2022")?.Val ?? 0;
+            var highestIncome = incomeRecords?.Max(r => r.Val) ?? 0;
 
-            if (income2021 <= 0 || income2022 <= 0)
-            {
-                return 0;
-            }
+            var standardFundableAmount = (incomeYears != null && incomeRecords != null && requiredYears.All(year => incomeYears.Contains(year)) && income2021 > 0 && income2022 > 0)
+                ? (highestIncome >= 10_000_000_000 ? highestIncome * 0.1233m : highestIncome * 0.2151m)
+                : 0;
 
-            var highestIncome = incomeRecords.Max(r => r.Val);
-
-            if (highestIncome >= 10000000000)
-            {
-                return highestIncome * 0.1233m;
-            }
-
-            return highestIncome * 0.2151m;
+            return Math.Round(standardFundableAmount, 2);
         }
 
         private decimal CalculateSpecialFundableAmount(Company company)
@@ -77,20 +68,23 @@ namespace ForaLending.API.Controllers
             var standardAmount = CalculateStandardFundableAmount(company);
             var specialAmount = standardAmount;
 
-            if ("AEIOU".Contains(char.ToUpper(company.Name[0])))
+            if (!string.IsNullOrEmpty(company?.Name) && "AEIOU".Contains(char.ToUpper(company.Name[0])))
             {
                 specialAmount += standardAmount * 0.15m;
             }
 
-            var income2021 = company.IncomeRecords?.FirstOrDefault(r => r.Frame == "CY2021")?.Val ?? 0;
-            var income2022 = company.IncomeRecords?.FirstOrDefault(r => r.Frame == "CY2022")?.Val ?? 0;
+            var incomeRecords = company?.IncomeRecords?.Where(r => r.Frame?.StartsWith("CY") == true).ToList();
+            if (incomeRecords == null || incomeRecords.Count == 0) return Math.Round(specialAmount, 2);
+
+            var income2021 = incomeRecords.FirstOrDefault(r => r.Frame == "CY2021")?.Val ?? 0;
+            var income2022 = incomeRecords.FirstOrDefault(r => r.Frame == "CY2022")?.Val ?? 0;
 
             if (income2022 < income2021)
             {
                 specialAmount -= standardAmount * 0.25m;
             }
 
-            return specialAmount;
+            return Math.Round(specialAmount, 2);
         }
     }
 
@@ -101,6 +95,4 @@ namespace ForaLending.API.Controllers
         public decimal StandardFundableAmount { get; set; }
         public decimal SpecialFundableAmount { get; set; }
     }
-
-
 }

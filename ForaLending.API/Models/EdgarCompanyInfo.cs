@@ -3,69 +3,70 @@ using System.Text.Json.Serialization;
 
 namespace ForaFinacial.API.Models
 {
+    using Humanizer;
+    using Microsoft.VisualBasic;
+    using System.Text.Json.Serialization;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
+
     public class EdgarCompanyInfo
     {
         [JsonPropertyName("cik")]
         public int Cik { get; set; }
+       
 
         [JsonPropertyName("entityName")]
-        public string EntityName { get; set; }
+        public string EntityName { get; set; } = "";
 
         [JsonPropertyName("facts")]
-        public Facts facts { get; set; }
+        public InfoFact? Facts { get; set; }
 
-        public class Facts
+        public class InfoFact
         {
             [JsonPropertyName("us-gaap")]
-            public UsGaap UsGaap { get; set; }
+            public InfoFactUsGaap? UsGaap { get; set; }
         }
 
-        public class UsGaap
+        public class InfoFactUsGaap
         {
             [JsonPropertyName("NetIncomeLoss")]
-            public NetIncomeLoss NetIncomeLoss { get; set; }
+            public InfoFactUsGaapNetIncomeLoss? NetIncomeLoss { get; set; }
         }
 
-        public class NetIncomeLoss
+        public class InfoFactUsGaapNetIncomeLoss
         {
             [JsonPropertyName("units")]
-            public Units Units { get; set; }
+            public InfoFactUsGaapIncomeLossUnits? Units { get; set; }
         }
 
-        public class Units
+        public class InfoFactUsGaapIncomeLossUnits
         {
             [JsonPropertyName("USD")]
-            public List<IncomeRecord> Usd { get; set; }
+            public InfoFactUsGaapIncomeLossUnitsUsd[]? Usd { get; set; }
         }
 
-        public class IncomeRecord
+        public class InfoFactUsGaapIncomeLossUnitsUsd
         {
-            [JsonPropertyName("start")]
-            public DateTime Start { get; set; }
 
-            [JsonPropertyName("end")]
-            public DateTime End { get; set; }
-
-            [JsonPropertyName("val")]
-            public decimal Val { get; set; }
-
-            [JsonPropertyName("accn")]
-            public string Accn { get; set; }
-
-            [JsonPropertyName("fy")]
-            public int Fy { get; set; }
-
-            [JsonPropertyName("fp")]
-            public string Fp { get; set; }
-
+            /// <summary>
+            /// Possibilities include 10-Q, 10-K,8-K, 20-F, 40-F, 6-K, and
+            ///their variants.YOU ARE INTERESTED ONLY IN 10-K DATA!
+            /// </summary>
             [JsonPropertyName("form")]
-            public string Form { get; set; }
-
-            [JsonPropertyName("filed")]
-            public DateTime Filed { get; set; }
+            public string? Form { get; set; } 
 
             [JsonPropertyName("frame")]
-            public string Frame { get; set; }
+            /// <summary>
+            /// For yearly information, the format is CY followed by the year
+            /// number.For example: CY2021.YOU ARE INTERESTED ONLY IN YEARLY INFORMATION
+            ///WHICH FOLLOWS THIS FORMAT!
+            /// </summary>
+            public string? Frame { get; set; } 
+
+            [JsonPropertyName("val")]
+            /// <summary>
+            /// The income/loss amount.
+            /// </summary>
+            public decimal Val { get; set; }
         }
     }
 }

@@ -10,6 +10,6 @@ namespace ForaLending.API.Models
         public string? Form { get; set; }
         public string? Frame { get; set; }
         public decimal Val { get; set; }
-        public Company? Company { get; set; }
+        public required Company Company { get; set; }
     }
 }
