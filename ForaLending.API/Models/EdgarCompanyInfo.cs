@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ForaFinacial.API.Models
 {
+    using ForaLending.API;
     using Humanizer;
     using Microsoft.VisualBasic;
     using System.Text.Json.Serialization;
@@ -10,7 +11,11 @@ namespace ForaFinacial.API.Models
 
     public class EdgarCompanyInfo
     {
+        /// <summary>
+        /// This needs to be a string instead of an integer because the values returned by the api sometimes contain the leading zeros.
+        /// </summary>
         [JsonPropertyName("cik")]
+        [JsonConverter(typeof(LeadingZeroIntConverter))]
         public int Cik { get; set; }
        
 

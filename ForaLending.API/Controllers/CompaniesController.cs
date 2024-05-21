@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ForaLending.API.Data;
 using ForaLending.API.Models;
+using System.Text.Json.Serialization;
 
 namespace ForaLending.API.Controllers
 {
@@ -54,7 +55,7 @@ namespace ForaLending.API.Controllers
             var income2021 = incomeRecords?.FirstOrDefault(r => r.Frame == "CY2021")?.Val ?? 0;
             var income2022 = incomeRecords?.FirstOrDefault(r => r.Frame == "CY2022")?.Val ?? 0;
 
-            var highestIncome = incomeRecords?.Max(r => r.Val) ?? 0;
+            var  highestIncome = (incomeRecords?.Count ?? 0) > 0 ? incomeRecords?.Max(r => r.Val) ??  0 : 0;
 
             var standardFundableAmount = (incomeYears != null && incomeRecords != null && requiredYears.All(year => incomeYears.Contains(year)) && income2021 > 0 && income2022 > 0)
                 ? (highestIncome >= 10_000_000_000 ? highestIncome * 0.1233m : highestIncome * 0.2151m)
@@ -92,7 +93,11 @@ namespace ForaLending.API.Controllers
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+
+        [JsonConverter(typeof(DecimalConverter))]
         public decimal StandardFundableAmount { get; set; }
+
+        [JsonConverter(typeof(DecimalConverter))]
         public decimal SpecialFundableAmount { get; set; }
     }
 }

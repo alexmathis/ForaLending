@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ForaLending.API.Migrations
 {
     [DbContext(typeof(ForaFinancialContext))]
-    [Migration("20240520183848_Initial-Migration")]
+    [Migration("20240521022133_Initial-Migration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -35,12 +35,6 @@ namespace ForaLending.API.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<decimal>("SpecialFundableAmount")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("StandardFundableAmount")
-                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 

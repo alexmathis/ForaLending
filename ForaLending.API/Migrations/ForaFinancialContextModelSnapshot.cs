@@ -33,12 +33,6 @@ namespace ForaLending.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("SpecialFundableAmount")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("StandardFundableAmount")
-                        .HasColumnType("numeric");
-
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
