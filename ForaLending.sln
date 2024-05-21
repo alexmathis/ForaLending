@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForaLending.API", "ForaLend
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{43FA5F52-CF77-4925-842D-E161C4E0FCFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForaLending.Tests", "ForaLending.Tests\ForaLending.Tests.csproj", "{971E8E70-40DF-4555-9B39-7214CA673A9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{43FA5F52-CF77-4925-842D-E161C4E0FCFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43FA5F52-CF77-4925-842D-E161C4E0FCFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43FA5F52-CF77-4925-842D-E161C4E0FCFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{971E8E70-40DF-4555-9B39-7214CA673A9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{971E8E70-40DF-4555-9B39-7214CA673A9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{971E8E70-40DF-4555-9B39-7214CA673A9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{971E8E70-40DF-4555-9B39-7214CA673A9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

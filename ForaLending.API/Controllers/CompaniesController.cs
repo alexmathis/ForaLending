@@ -45,7 +45,7 @@ namespace ForaLending.API.Controllers
             return Ok(companyDtos);
         }
 
-        private decimal CalculateStandardFundableAmount(Company company)
+        public decimal CalculateStandardFundableAmount(Company company)
         {
             var incomeRecords = company?.IncomeRecords?.Where(r => r.Frame?.StartsWith("CY") == true).ToList();
            
@@ -64,7 +64,7 @@ namespace ForaLending.API.Controllers
             return Math.Round(standardFundableAmount, 2);
         }
 
-        private decimal CalculateSpecialFundableAmount(Company company)
+        public decimal CalculateSpecialFundableAmount(Company company)
         {
             var standardAmount = CalculateStandardFundableAmount(company);
             var specialAmount = standardAmount;
