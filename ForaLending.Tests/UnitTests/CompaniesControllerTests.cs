@@ -1,18 +1,28 @@
-﻿using ForaLending.API.Controllers;
+﻿using ForaLending.API.CalculationService;
+using ForaLending.API.Controllers;
 using ForaLending.API.Data;
+using ForaLending.API.DTOs;
 using ForaLending.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ForaLending.Tests.UnitTests
 {
     public class CompaniesControllerTests
     {
+
+        private readonly CalculationService _fundCalculationService;
+
+        public CompaniesControllerTests()
+        {
+            var dbContextOptions = new DbContextOptionsBuilder<ForaFinancialContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .Options;
+
+            _fundCalculationService = new CalculationService();
+        }
+
         [Fact]
         public async Task GetCompanies_ShouldReturnCompanies()
         {
@@ -25,7 +35,7 @@ namespace ForaLending.Tests.UnitTests
             context.Companies.Add(new Company { Id = 1, Name = "Test Company" });
             context.SaveChanges();
 
-            var controller = new CompaniesController(context);
+            var controller = new CompaniesController(context, _fundCalculationService);
 
             // Act
             var result = await controller.GetCompanies(null);
@@ -57,10 +67,9 @@ namespace ForaLending.Tests.UnitTests
                 }
             };
 
-            var controller = new CompaniesController(null);
 
             // Act
-            var result = controller.CalculateSpecialFundableAmount(company);
+            var result = _fundCalculationService.CalculateSpecialFundableAmount(company);
 
             // Assert
             Assert.Equal(1075500000m * 1.15m, result); // Including the 15% increase for a name starting with a vowel
@@ -84,10 +93,8 @@ namespace ForaLending.Tests.UnitTests
             }
             };
 
-            var controller = new CompaniesController(null);
-
             // Act
-            var result = controller.CalculateSpecialFundableAmount(company);
+            var result = _fundCalculationService.CalculateSpecialFundableAmount(company);
 
             // Assert
             Assert.Equal(1075500000m * 0.75m, result); // Including the 25% decrease for lower 2022 income
@@ -112,10 +119,8 @@ namespace ForaLending.Tests.UnitTests
             }
             };
 
-            var controller = new CompaniesController(null);
-
             // Act
-            var result = controller.CalculateStandardFundableAmount(company);
+            var result = _fundCalculationService.CalculateStandardFundableAmount(company);
 
             // Assert
             Assert.Equal(0m, result);
@@ -139,10 +144,8 @@ namespace ForaLending.Tests.UnitTests
             }
             };
 
-            var controller = new CompaniesController(null);
-
             // Act
-            var result = controller.CalculateStandardFundableAmount(company);
+            var result = _fundCalculationService.CalculateStandardFundableAmount(company);
 
             // Assert
             Assert.Equal(0m, result);
@@ -158,10 +161,8 @@ namespace ForaLending.Tests.UnitTests
                 IncomeRecords = new List<IncomeRecord>()
             };
 
-            var controller = new CompaniesController(null);
-
             // Act
-            var result = controller.CalculateStandardFundableAmount(company);
+            var result = _fundCalculationService.CalculateStandardFundableAmount(company);
 
             // Assert
             Assert.Equal(0m, result);
@@ -185,10 +186,8 @@ namespace ForaLending.Tests.UnitTests
             }
             };
 
-            var controller = new CompaniesController(null);
-
             // Act
-            var result = controller.CalculateStandardFundableAmount(company);
+            var result = _fundCalculationService.CalculateStandardFundableAmount(company);
 
             // Assert
             Assert.Equal(0m, result);
@@ -212,10 +211,8 @@ namespace ForaLending.Tests.UnitTests
             }
             };
 
-            var controller = new CompaniesController(null);
-
             // Act
-            var result = controller.CalculateStandardFundableAmount(company);
+            var result = _fundCalculationService.CalculateStandardFundableAmount(company);
 
             // Assert
             Assert.Equal(0m, result);

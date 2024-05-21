@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using ForaLending.API.EdgarService;
+using ForaLending.API.CalculationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,7 @@ builder.Services.AddHttpClient<EdgarService>(client =>
     client.DefaultRequestHeaders.Add("User-Agent", "PostmanRuntime/7.34.0");
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
 });
-
+builder.Services.AddScoped<ICalculationService, CalculationService>();
 builder.Services.AddScoped<EdgarService>();
 builder.Services.AddHostedService<EdgarStartUpService>();
 
