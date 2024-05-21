@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ForaLending.API.Data;
 using ForaLending.API.Models;
 using System.Text.Json.Serialization;
+using ForaLending.API.JsonConverters;
 
 namespace ForaLending.API.Controllers
 {
@@ -22,7 +23,7 @@ namespace ForaLending.API.Controllers
             _context = context;
         }
 
-        // GET: api/Companies
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanies([FromQuery] char? startsWith)
         {

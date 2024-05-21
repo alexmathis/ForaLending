@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Text.Json;
 
-namespace ForaLending.API;
+namespace ForaLending.API.EdgarService;
 
 public class EdgarService
 {
@@ -24,8 +24,8 @@ public class EdgarService
 
     public async Task FetchAndSaveDataAsync(IEnumerable<int> ciks)
     {
-        const int rateLimit = 10; // 10 requests per second
-        const int delay = 1000; // 1000 milliseconds = 1 second
+        const int rateLimit = 10; 
+        const int delay = 1000; 
 
         var invalidCiks = 0;
         var cikList = ciks.ToList();
@@ -37,7 +37,7 @@ public class EdgarService
             var tasks = batch.Select(cik => ProcessCikAsync(cik));
             var results = await Task.WhenAll(tasks);
 
-            // Count invalid CIKs in this batch
+          
             invalidCiks += results.Count(r => !r);
 
             if (i + rateLimit < cikList.Count)
@@ -81,7 +81,7 @@ public class EdgarService
                 Name = companyInfo.EntityName,
             };
 
-            //Create the income records and set the Company reference
+
             company.IncomeRecords = companyInfo?.Facts?.UsGaap?.NetIncomeLoss?.Units?.Usd?
                 .Where(u => (u.Form ?? "") == "10-K" && (u.Frame ?? "").StartsWith("CY"))
                 .Select(u => new IncomeRecord
@@ -89,17 +89,17 @@ public class EdgarService
                     Form = u.Form,
                     Frame = u.Frame,
                     Val = u.Val,
-                    Company = company // Set the Company reference
+                    Company = company 
                 }).ToList();
 
             context.Companies.Add(company);
             await context.SaveChangesAsync();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             _logger.LogWarning($"Deserialization error for {cik} error message {ex.Message}" ?? "");
         }
-   
+
 
         return true;
     }

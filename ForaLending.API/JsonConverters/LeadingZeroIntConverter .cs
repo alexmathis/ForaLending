@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ForaLending.API
+namespace ForaLending.API.JsonConverters
 {
     public class LeadingZeroIntConverter : JsonConverter<int>
     {

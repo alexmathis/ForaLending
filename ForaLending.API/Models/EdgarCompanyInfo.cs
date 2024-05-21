@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ForaFinacial.API.Models
 {
-    using ForaLending.API;
+    using ForaLending.API.JsonConverters;
     using Humanizer;
     using Microsoft.VisualBasic;
     using System.Text.Json.Serialization;

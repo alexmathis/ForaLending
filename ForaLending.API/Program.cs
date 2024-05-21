@@ -3,6 +3,7 @@ using ForaLending.API.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using System.Net.Http;
+using ForaLending.API.EdgarService;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-namespace ForaLending.API;
+namespace ForaLending.API.JsonConverters;
 
 public class DecimalConverter : JsonConverter<decimal>
 {

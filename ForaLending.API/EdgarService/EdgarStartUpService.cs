@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ForaLending.API;
+namespace ForaLending.API.EdgarService;
 
 public class EdgarStartUpService : IHostedService
 {
@@ -20,7 +20,7 @@ public class EdgarStartUpService : IHostedService
                                 1858007,1729944,726958,1691221,730272,1308106,884144,1108134,1849058,1435617,1857518,64803,
                                 1912498,1447380,1232384,1141788,1549922,914475,1498382,1400897,314808,1323885,1526520,1550695,
                                 1634293,1756708,1540159,1076691,1980088,1532346,923796,1849635,1872292,1227857,1046311,1710350,
-                                1476150,1844642,1967078,14272,933267,1157557,1560293,217410,1798562,1038074,1843370}; // Add all required CIKs here
+                                1476150,1844642,1967078,14272,933267,1157557,1560293,217410,1798562,1038074,1843370}; 
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)

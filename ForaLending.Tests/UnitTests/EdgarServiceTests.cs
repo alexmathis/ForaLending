@@ -1,5 +1,5 @@
-﻿using ForaLending.API;
-using ForaLending.API.Data;
+﻿using ForaLending.API.Data;
+using ForaLending.API.EdgarService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
