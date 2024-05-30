@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Moq.Protected;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,9 +19,36 @@ namespace ForaLending.Tests.UnitTests
         [Fact]
         public async Task FetchAndSaveDataAsync_ShouldFetchAndSaveData()
         {
-            // Arrange
+            var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+            httpMessageHandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(@"
+                    {
+                        ""entityName"": ""Test Company"",
+                        ""facts"": {
+                            ""us-gaap"": {
+                                ""NetIncomeLoss"": {
+                                    ""units"": {
+                                        ""USD"": [
+                                            { ""frame"": ""CY2021"", ""val"": 1000000000 },
+                                            { ""frame"": ""CY2022"", ""val"": 2000000000 }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }")
+                });
+
+            var httpClient = new HttpClient(httpMessageHandlerMock.Object);
+
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            var httpClient = new HttpClient();
             httpClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
             var dbContextOptions = new DbContextOptionsBuilder<ForaFinancialContext>()
